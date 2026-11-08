@@ -419,7 +419,7 @@ function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('on');clea
 const initials=s=>String(s||'?').replace(/[^A-Za-z ]/g,' ').trim().split(/\s+/).slice(0,2).map(w=>w[0]).join('').toUpperCase()||'•';
 
 /* ---------- server ---------- */
-const API_URL='https://script.google.com/macros/s/AKfycbyJA4Q24L6liHU_p6TSy81XPIlSK5IqskHMywCasBwznDCYiPNM95JL_zrw90fqoCJuQg/exec';
+const API_URL='https://script.google.com/macros/s/AKfycbxK6_D4QfD7F7DV_s9AIK-uS0mam-Wl8zevHlBjlJbNXs-iG-Np3SAzxrRq-hAlGk26Ng/exec';
 let TOKEN=null;try{TOKEN=localStorage.getItem('cf_token');}catch(_){}
 function saveToken(t){TOKEN=t;try{t?localStorage.setItem('cf_token',t):localStorage.removeItem('cf_token');}catch(_){}}
 async function call(body,timeout){
