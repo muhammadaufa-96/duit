@@ -195,7 +195,7 @@ nav.bar .cam svg{width:26px;height:26px}
 .grab{width:40px;height:4px;border-radius:2px;background:var(--line);margin:0 auto 12px}
 @media (min-width:600px){.overlay{align-items:center}.sheet{border-radius:24px}.grab{display:none}}
 .sheet-h{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:14px}
-.tseg{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;background:var(--soft);padding:4px;border-radius:14px;margin-bottom:12px}
+.tseg{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px;background:var(--soft);padding:4px;border-radius:14px;margin-bottom:12px}
 .tseg button{border:0;background:none;padding:10px 6px;border-radius:11px;font-weight:600;font-size:.85rem;cursor:pointer;color:var(--ink-2)}
 .tseg button[aria-pressed="true"]{background:var(--surface);color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.12)}
 .field{display:flex;flex-direction:column;gap:5px;margin-bottom:12px}
@@ -205,9 +205,12 @@ nav.bar .cam svg{width:26px;height:26px}
 .amtrow span{font-family:var(--display);font-weight:700;font-size:1.3rem;color:var(--muted)}
 .amtrow input{border:0;background:none;font-family:var(--display);font-weight:800;font-size:2.2rem;width:100%;padding:0;outline:none}
 .amtrow:focus-within{border-color:var(--accent)}
-.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px}
+.field{min-width:0}
+.field input[type=date]{-webkit-appearance:none;appearance:none;min-width:0;display:block;min-height:44px;text-align:left}
+.sheet{overflow-x:hidden}
 .fhint{font-size:.77rem;color:var(--muted)}
-.catgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;max-height:216px;overflow:auto;padding:2px}
+.catgrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;max-height:216px;overflow:auto;padding:2px}
 .catbtn{border:1px solid transparent;background:none;border-radius:14px;padding:8px 2px;display:flex;flex-direction:column;align-items:center;gap:5px;cursor:pointer;font-size:.7rem;color:var(--ink-2);text-align:center;line-height:1.2}
 .catbtn[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft);color:var(--ink);font-weight:600}
 .rlist{display:flex;flex-direction:column;gap:8px}
@@ -533,7 +536,7 @@ async function call(body,timeout){
 }
 async function run(fn,...args){
   const long=['saveTx','uploadDocs','importTx','exportZip','scanReceipt','setAiKey'].includes(fn);
-  const j=await call({fn,args,token:TOKEN},long?300000:30000);
+  const j=await call({fn,args,token:TOKEN},fn==='scanReceipt'?75000:long?300000:30000);
   if(!j.ok){if(j.error==='AUTH'){saveToken(null);showPin('login');throw new Error('Sila masukkan PIN semula.');}
     if(/Fungsi tak dikenali/.test(j.error||''))throw new Error('Kod Google perlu dikemas kini ke versi terbaru (Code.gs VERSI 5 dalam Drive).');
     throw new Error(j.error||'Ralat');}
@@ -1205,7 +1208,7 @@ async function scanReceipt(file){
     applyScan(r||{});
   }catch(e){
     if(tok!==S.scanTok)return;
-    box.className='aibox err';box.innerHTML=`<div>AI tak dapat baca resit ni: ${esc(e.message||'cuba lagi')}. Isi manual, resit tetap disimpan.</div>`;
+    box.className='aibox err';box.innerHTML=`<div>AI tak dapat baca resit ni: ${esc(String(e.message||'cuba lagi').replace(/\.+$/,''))}. Jangan tukar ke app lain masa AI tengah baca.</div><button type="button" class="btn sm" style="margin-top:8px" data-act="airetry">Cuba lagi</button>`;
   }
 }
 function applyScan(r){
@@ -1292,6 +1295,7 @@ document.addEventListener('click',e=>{
   else if(a==='catdel'){if(el.dataset.confirm!=='1'){el.dataset.confirm='1';el.textContent='Tekan lagi untuk buang';return;}delCat();}
   else if(a==='import')openImport();
   else if(a==='ai')openAI();
+  else if(a==='airetry'){S.scanned=false;maybeScan(S.files);}
   else if(a==='aisave')saveAI(false);
   else if(a==='aioff'){if(el.dataset.confirm!=='1'){el.dataset.confirm='1';el.textContent='Tekan lagi untuk matikan';return;}saveAI(true);}
   else if(a==='impgo')doImport();
