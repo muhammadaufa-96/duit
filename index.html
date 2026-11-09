@@ -665,7 +665,7 @@ function txRow(t){
   const nr=rcpts(t).length;
   const rc=nr?`<span class="pill good">${nr>1?nr+' resit':'Resit'}</span>`:(needsRcpt(t)?`<span class="pill warn">Tiada resit</span>`:'');
   return `<button class="tx" data-edit="${esc(t.id)}">${icBox(c)}
-    <div style="min-width:0"><div class="n">${esc(t.cat||'')}</div><div class="m">${t.desc?`<span class="d">${esc(t.desc)}</span>`:''}${rel}${rc}</div></div>
+    <div style="min-width:0"><div class="n">${esc((S.rowDesc&&t.desc)||t.cat||'')}</div><div class="m">${t.desc&&!S.rowDesc?`<span class="d">${esc(t.desc)}</span>`:''}${rel}${rc}</div></div>
     <div class="amt num ${t.type==='in'?'in':''}">${t.type==='in'?'+':'−'}${RM(t.amount)}</div></button>`;
 }
 function dayLabel(d){const t=todayStr();if(d===t)return 'Hari ini';const y=new Date();y.setDate(y.getDate()-1);const ys=y.getFullYear()+'-'+pad2(y.getMonth()+1)+'-'+pad2(y.getDate());if(d===ys)return 'Semalam';return (+d.slice(8))+' '+MONTHS[+d.slice(5,7)-1]+' '+d.slice(0,4);}
@@ -681,7 +681,7 @@ function viewHome(){
   const c=calc(S.year);
   return `<div class="stack" style="margin-top:4px">
     <input class="search" id="q" type="search" placeholder="Cari rekod" value="${esc(S.q)}" aria-label="Cari rekod">
-    ${q?'':`${budgets.length?`<div class="rings">${budgets.map(b=>{const sp=ms.by[b.name]||0;return `<button class="ring" data-go="budget" aria-label="${esc(b.name)}: ${RM(sp)} daripada ${RM(b.budget)}"><span class="rw">${ringSVG(sp/b.budget,'var(--in)')}<span class="ic" style="background:${hexA(b.color,.16)};color:${b.color}">${svgI(b.icon)}</span></span><span>${esc(b.name)}</span></button>`;}).join('')}</div>`:''}
+    ${q?'':`${budgets.length?`<div class="rings">${budgets.map(b=>{const sp=ms.by[b.name]||0;return `<button class="ring" data-catview="${esc(b.name)}" aria-label="${esc(b.name)}: ${RM(sp)} daripada ${RM(b.budget)}"><span class="rw">${ringSVG(sp/b.budget,'var(--in)')}<span class="ic" style="background:${hexA(b.color,.16)};color:${b.color}">${svgI(b.icon)}</span></span><span>${esc(b.name)}</span></button>`;}).join('')}</div>`:''}
     <div class="hero">
       <div class="lab">Cashflow · ${S.ym===curYM()?'Bulan ini':ymLabel(S.ym)}</div>
       <div class="big num"><small>${ms.net<0?'−':''}RM</small>${fmt(Math.abs(ms.net))}</div>
@@ -743,7 +743,7 @@ function viewStats(){
       <div style="font-family:var(--display);font-weight:800;font-size:2rem" class="num">−${RM(outOnly)}</div>
       ${chg!==null?`<div class="sub" style="margin-top:2px"><b style="color:${chg>0?'var(--crit)':'var(--good)'}">${chg>0?'▲':'▼'} ${Math.abs(chg).toFixed(0)}%</b> berbanding ${MONTHS_L[+shiftYM(S.ym,-1).slice(5)-1]}</div>`:''}
       <div class="donut">${donutSVG(top,outOnly)}</div>
-      <div>${top.map(p=>`<div class="lgrow">${icBox(p,'sm')}<span>${esc(p.k)}</span><span class="num" style="text-align:right">${RM(p.v)}<span class="sub" style="display:block">${(p.v/outOnly*100).toFixed(1)}%</span></span></div>`).join('')||'<p class="note">Belum ada belanja bulan ini.</p>'}</div>
+      <div>${top.map(p=>`<button class="lgrow" ${p.k==='Lain-lain kategori'?'disabled':`data-catview="${esc(p.k)}"`} style="width:100%;background:none;border-left:0;border-right:0;border-bottom:0;text-align:left;font:inherit;color:inherit;cursor:pointer">${icBox(p,'sm')}<span>${esc(p.k)}</span><span class="num" style="text-align:right">${RM(p.v)}<span class="sub" style="display:block">${(p.v/outOnly*100).toFixed(1)}%</span></span></button>`).join('')||'<p class="note">Belum ada belanja bulan ini.</p>'}</div>
       ${dedTot>0?`<p class="note" style="margin:10px 0 0">Tak termasuk potongan gaji ${RM(dedTot)} (KWSP, PERKESO, PCB).</p>`:''}</div>
     <div class="card"><div class="card-h"><h2>Cashflow</h2><small>${ymLabel(S.ym)}</small></div>
       <div style="font-family:var(--display);font-weight:800;font-size:1.8rem;color:${ms.net<0?'var(--crit)':'var(--ink)'}" class="num">${sgn(ms.net)}</div>
@@ -757,10 +757,10 @@ function viewBudget(){
     ${withB.length?`<div class="hero"><div class="lab">Bajet ${S.ym===curYM()?'bulan ini':ymLabel(S.ym)}</div>
       <div class="big num"><small>RM</small>${fmt(ts)}</div><div class="lg" style="margin-top:0"><span>daripada ${RM(tb)}</span><b>${tb-ts>=0?'Baki '+RM(tb-ts):'Lebih '+RM(ts-tb)}</b></div>
       <div class="bar"><i style="width:${Math.min(100,ts/tb*100)}%;background:${ts>tb?'#ef7a68':'var(--gold)'}"></i></div></div>
-    <div class="list">${withB.map(c=>{const sp=ms.by[c.name]||0,p=sp/c.budget;return `<button class="rw2" data-catedit="${esc(c.name)}">${icBox(c)}<div style="min-width:0"><div class="t">${esc(c.name)}</div><div class="prog"><i class="${p>1?'over':''}" style="width:${Math.min(100,p*100)}%"></i></div></div><div class="r num"><b>${RM(sp)}</b>daripada ${RM0(c.budget)}</div></button>`;}).join('')}</div>`
+    <div class="list">${withB.map(c=>{const sp=ms.by[c.name]||0,p=sp/c.budget;return `<button class="rw2" data-catview="${esc(c.name)}">${icBox(c)}<div style="min-width:0"><div class="t">${esc(c.name)}</div><div class="prog"><i class="${p>1?'over':''}" style="width:${Math.min(100,p*100)}%"></i></div></div><div class="r num"><b>${RM(sp)}</b>daripada ${RM0(c.budget)}</div></button>`;}).join('')}</div>`
     :`<div class="card empty"><h2>Belum ada bajet</h2><p class="note">Pilih kategori di bawah dan set had sebulan. Bajet akan muncul sebagai cincin di skrin Utama.</p></div>`}
     <div class="sec"><h2>Tetapkan bajet</h2></div>
-    <div class="list">${without.map(c=>`<button class="rw2" data-catedit="${esc(c.name)}">${icBox(c)}<div style="min-width:0"><div class="t">${esc(c.name)}</div><div class="s num">${RM(ms.by[c.name]||0)} bulan ini</div></div><span class="btn sm">Set</span></button>`).join('')}</div>
+    <div class="list">${without.map(c=>`<div class="rw2" style="cursor:default"><button data-catview="${esc(c.name)}" style="display:contents;font:inherit;color:inherit;text-align:left">${icBox(c)}<div style="min-width:0"><div class="t">${esc(c.name)}</div><div class="s num">${RM(ms.by[c.name]||0)} bulan ini ›</div></div></button><button class="btn sm" data-catedit="${esc(c.name)}" data-cattype="out">Set</button></div>`).join('')}</div>
   </div>`;
 }
 
@@ -907,7 +907,8 @@ function openForm(t,preset){
   closeG();$('#txOverlay').classList.add('on');$('#txOverlay').setAttribute('aria-hidden','false');
   if(!t)setTimeout(()=>$('#fAmt').focus(),80);
 }
-function closeForm(){$('#txOverlay').classList.remove('on');$('#txOverlay').setAttribute('aria-hidden','true');S.edit=null;}
+function closeForm(){$('#txOverlay').classList.remove('on');$('#txOverlay').setAttribute('aria-hidden','true');S.edit=null;
+  if(S.returnCv){const r=S.returnCv;S.returnCv=null;setTimeout(()=>openCatView(r.name,r.type,r.ym),0);}}
 async function saveForm(e){
   e.preventDefault();
   const amount=parseAmt($('#fAmt').value);if(!(amount>0)){toast('Masukkan jumlah yang betul.');$('#fAmt').focus();return;}
@@ -1065,6 +1066,32 @@ async function loadThumbs(ids){
   need.forEach(id=>S.thumbReq.add(id));
   try{const res=await run('thumbs',need);Object.assign(S.thumbs,res||{});
     if(S.view==='tax'&&S.taxTab==='rcpt')render();if($('#txOverlay').classList.contains('on'))renderReceipt();}catch(_){}
+}
+
+/* ================= SEMUA REKOD SATU KATEGORI (ala Spendee) ================= */
+function openCatView(name,type,ym){
+  type=type||'out';ym=ym||S.ym;
+  const c=catOf(name,type),list=S.txns.filter(t=>t.cat===name&&(type==='out'?t.type==='out':t.type===type)&&String(t.date||'').slice(0,7)===ym);
+  const sp=list.reduce((s,t)=>s+(+t.amount||0),0),bud=type==='out'?(+c.budget||0):0;
+  const prevYm=shiftYM(ym,-1),prev=S.txns.filter(t=>t.cat===name&&t.type===type&&String(t.date||'').slice(0,7)===prevYm).reduce((s,t)=>s+(+t.amount||0),0);
+  const [y,m]=ym.split('-').map(Number),dim=new Date(y,m,0).getDate(),isCur=ym===curYM();
+  const dayNow=isCur?new Date().getDate():dim,left=isCur?dim-dayNow+1:0;
+  const avg=sp/Math.max(1,dayNow),p=bud?sp/bud:0;
+  const stat=(k,v)=>`<div style="flex:1;min-width:0"><div class="sub">${k}</div><b class="num" style="font-size:.98rem">${v}</b></div>`;
+  const html=`<div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px">
+      <button class="btn sm" data-cv="-1" aria-label="Bulan sebelum">‹</button><b>${ymLabel(ym)}</b>
+      <button class="btn sm" data-cv="1" aria-label="Bulan seterusnya" ${ym>=curYM()?'disabled':''}>›</button></div>
+    <div class="card" style="padding:14px">
+      <div class="keep">${icBox(c)}<div style="flex:1;min-width:0"><div class="sub">${type==='in'?'Diterima':'Dibelanjakan'}</div><b class="num" style="font-size:1.5rem">${RM(sp)}</b></div>
+        ${bud?`<div style="text-align:right"><div class="sub">Bajet</div><b class="num">${RM0(bud)}</b></div>`:''}</div>
+      ${bud?`<div class="prog" style="height:9px;margin-top:12px"><i class="${p>1?'over':''}" style="width:${Math.min(100,p*100)}%"></i></div>
+        <div class="sub" style="margin-top:6px;color:${p>1?'var(--crit)':'var(--ink-2)'}">${p>1?`Lebih ${RM(sp-bud)} dari bajet`:`Baki ${RM(bud-sp)}${isCur&&left>0?` · boleh guna ${RM((bud-sp)/left)} sehari untuk ${left} hari lagi`:''}`}</div>`:''}
+      <div style="display:flex;gap:10px;margin-top:12px">${stat('Purata sehari',RM(avg))}${stat('Bilangan',list.length+' rekod')}${stat(MONTHS[+prevYm.slice(5)-1]+' lepas',RM(prev))}</div></div>
+    <div style="margin-top:6px">${list.length?(S.rowDesc=true,(()=>{const h=dayGroups(list);S.rowDesc=false;return h;})()):`<p class="note" style="text-align:center;margin:18px 0">Tiada rekod ${esc(name)} dalam ${ymLabel(ym)}.</p>`}</div>
+    <div style="display:flex;flex-direction:column;gap:8px;margin-top:14px">
+      <button class="btn pri block" data-cvadd="1">+ Rekod ${esc(name)}</button>
+      ${type==='out'?`<button class="btn block" data-catedit="${esc(name)}" data-cattype="out">${bud?'Ubah bajet':'Set bajet'} & kategori</button>`:''}</div>`;
+  openG('catview',name,html,{cv:{name,type,ym}});
 }
 /* ================= IMPORT (Spendee CSV) ================= */
 function parseCSV(text){
@@ -1257,18 +1284,21 @@ async function saveAI(off){
 }
 /* ================= EVENTS ================= */
 document.addEventListener('click',e=>{
-  const el=e.target.closest('[data-view],[data-go],[data-ym],[data-edit],[data-act],[data-type],[data-pickcat],[data-rm-r],[data-rm-f],[data-copy],[data-rm-doc],[data-open-file],[data-ttab],[data-rfilter],[data-relief],[data-addrel],[data-catedit],[data-ceicon],[data-cecolor],[data-kdel]');
+  const el=e.target.closest('[data-view],[data-go],[data-ym],[data-edit],[data-act],[data-type],[data-pickcat],[data-rm-r],[data-rm-f],[data-copy],[data-rm-doc],[data-open-file],[data-ttab],[data-rfilter],[data-relief],[data-addrel],[data-catedit],[data-catview],[data-cv],[data-cvadd],[data-ceicon],[data-cecolor],[data-kdel]');
   if(!el||el.closest('#pad'))return;
   const d=el.dataset;
   if(d.view){S.view=d.view;S.q='';render();window.scrollTo(0,0);return;}
   if(d.go){S.view=d.go;render();window.scrollTo(0,0);return;}
   if(d.ym){S.ym=d.ym;render();return;}
-  if(d.edit){const t=S.txns.find(x=>x.id===d.edit);if(t)openForm(t);return;}
+  if(d.edit){const t=S.txns.find(x=>x.id===d.edit);S.returnCv=G.kind==='catview'?G.cv:null;if(t)openForm(t);return;}
   if(d.openFile){window.open(driveUrl(d.openFile),'_blank');return;}
   if(d.ttab){S.view='tax';S.taxTab=d.ttab;render();window.scrollTo(0,0);return;}
   if(d.rfilter){S.relFilter=d.rfilter;render();return;}
   if(d.relief){openRelief(d.relief);return;}
   if(d.addrel){const root=relRoot(d.addrel);const c=cats().find(x=>x.type==='out'&&(x.relief===d.addrel||relRoot(x.relief)===root));openForm(null,{type:'out',cat:c?c.name:'Lain-lain',relief:d.addrel});return;}
+  if(d.catview!==undefined){openCatView(d.catview,d.cattype||'out');return;}
+  if(d.cv!==undefined&&G.cv){const n=shiftYM(G.cv.ym,+d.cv);if(n<=curYM())openCatView(G.cv.name,G.cv.type,n);return;}
+  if(d.cvadd!==undefined&&G.cv){const {name,type}=G.cv;S.returnCv=G.cv;openForm(null,{type,cat:name});return;}
   if(d.catedit!==undefined){openCatEdit(d.catedit,d.cattype||'out');return;}
   if(d.ceicon){G.cat.icon=d.ceicon;document.querySelectorAll('[data-ceicon]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.ceicon===d.ceicon)));return;}
   if(d.cecolor){G.cat.color=d.cecolor;document.querySelectorAll('[data-cecolor]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.cecolor===d.cecolor)));return;}
