@@ -1236,15 +1236,15 @@ function openAI(){
     <ol class="steps" style="margin:0 0 12px">
       <li>Buka <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">aistudio.google.com/apikey</a> dan log masuk dengan Gmail kau.</li>
       <li>Tekan <b>Create API key</b>. Kalau ditanya projek, pilih yang dicadangkan.</li>
-      <li>Copy kunci tu (bermula AIza…) dan tampal di bawah.</li></ol>
-    <div class="field"><label for="aiKey">Kunci API Gemini</label><input id="aiKey" type="password" autocomplete="off" placeholder="${on?'Dah disimpan · tampal untuk tukar':'AIza…'}"></div>
+      <li>Tekan ikon copy di sebelah API Key (bermula AQ. atau AIza) dan tampal di bawah.</li></ol>
+    <div class="field"><label for="aiKey">Kunci API Gemini</label><input id="aiKey" type="password" autocomplete="off" placeholder="${on?'Dah disimpan · tampal untuk tukar':'AQ.…'}"></div>
     <button class="btn pri block" data-act="aisave">Simpan & uji</button>
     ${on?'<button class="btn block danger" style="margin-top:8px" data-act="aioff">Matikan AI</button>':''}
     <p class="note" style="margin-top:12px">Percuma, tak perlu kad kredit. Kunci disimpan dalam pelayan Google kau, bukan dalam telefon. Gambar resit dihantar ke Gemini untuk dibaca; untuk akaun percuma, Google boleh guna kandungan tu untuk tambah baik produk mereka.</p>`);
 }
 async function saveAI(off){
   const key=off?'':($('#aiKey')?.value||'').trim();
-  if(!off&&!/^[\w-]{20,}$/.test(key)){toast('Tampal kunci API yang betul dulu.');return;}
+  if(!off&&!/^[\w.\-]{20,}$/.test(key)){toast('Tampal kunci API yang betul dulu.');return;}
   const btn=$(off?'[data-act="aioff"]':'[data-act="aisave"]');if(btn){btn.disabled=true;btn.textContent=off?'Mematikan…':'Menguji kunci…';}
   try{const r=await run('setAiKey',key);S.ai=!off;closeG();toast(off?'AI dimatikan.':'AI aktif'+(r&&r.model?` (${r.model})`:'')+'. Cuba snap resit.');}
   catch(e){toast(e.message||'Tak dapat simpan kunci.');if(btn){btn.disabled=false;btn.textContent=off?'Matikan AI':'Simpan & uji';}}
