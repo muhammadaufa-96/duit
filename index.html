@@ -339,45 +339,45 @@ nav.bar .cam svg{width:26px;height:26px}
 /* ================= DATA: relief LHDN YA2026 ================= */
 const LHDN_SRC='https://www.hasil.gov.my/en/individual/individual-life-cycle/income-declaration/tax-reliefs/';
 const RELIEFS = [
-  {k:'life', g:'Harian', icon:'bag', n:'Gaya hidup', s:'Gaya hidup', cap:2500,
+  {k:'life', be:'G9', g:'Harian', icon:'bag', n:'Gaya hidup', s:'Gaya hidup', cap:2500,
     hint:'Buku, majalah, surat khabar, komputer, telefon pintar, tablet, langganan internet atas nama sendiri, dan kursus kemahiran diri.'},
-  {k:'sports', g:'Harian', icon:'sport', n:'Sukan', s:'Sukan', cap:1000,
+  {k:'sports', be:'G10', g:'Harian', icon:'sport', n:'Sukan', s:'Sukan', cap:1000,
     hint:'Peralatan sukan, yuran gym, sewa gelanggang atau fasiliti sukan, yuran latihan dan pertandingan sukan.'},
-  {k:'tour', g:'Harian', icon:'ticket', n:'Pelancongan domestik & budaya', s:'Pelancongan', cap:1000,
+  {k:'tour', be:'', g:'Harian', icon:'ticket', n:'Pelancongan domestik & budaya', s:'Pelancongan', cap:1000,
     hint:'Khas YA2026: tiket masuk tempat tarikan pelancongan dan program seni budaya dalam Malaysia. Hotel, minyak dan makan tak termasuk.'},
-  {k:'ev', g:'Harian', icon:'bolt', n:'Pengecas EV & mesin kompos', s:'EV / kompos', cap:2500,
-    hint:'Pasang, sewa atau beli pengecas EV di rumah, atau langganan cas EV. Mesin kompos sisa makanan: sekali dalam 3 tahun.'},
-  {k:'med', g:'Kesihatan & keluarga', icon:'health', n:'Perbelanjaan perubatan', s:'Perubatan', cap:10000,
+  {k:'ev', be:'G21', g:'Harian', icon:'bolt', n:'Pengecas EV, kompos, pengisar sisa & CCTV rumah', s:'EV / kompos / CCTV', cap:2500,
+    hint:'Pasang, sewa atau beli pengecas EV untuk kenderaan sendiri, atau langganan cas EV. Mesin kompos sisa makanan (sekali, YA2025 hingga 2027). Mulai YA2026: mesin pengisar sisa makanan dan sistem CCTV untuk rumah (sekali, YA2026 hingga 2027).'},
+  {k:'med', be:'G6', g:'Kesihatan & keluarga', icon:'health', n:'Perbelanjaan perubatan', s:'Perubatan', cap:10000,
     hint:'Penyakit serius, rawatan kesuburan, dan item di bawah untuk diri, pasangan atau anak. Resit klinik atau hospital berdaftar.'},
-  {k:'med_check', parent:'med', n:'Pemeriksaan penuh, saringan, kesihatan mental, alat ujian kendiri', s:'Medical check-up', cap:1000},
-  {k:'med_vax', parent:'med', n:'Vaksinasi', s:'Vaksin', cap:1000, hint:'Mulai YA2026: semua vaksin yang berdaftar dan diluluskan KKM.'},
-  {k:'med_dental', parent:'med', n:'Pemeriksaan & rawatan gigi', s:'Gigi', cap:1000},
-  {k:'med_ld', parent:'med', n:'Anak kurang upaya pembelajaran (18 tahun ke bawah)', s:'Anak OKU pembelajaran', cap:10000,
+  {k:'med_check', be:'G7', parent:'med', n:'Pemeriksaan penuh, saringan, kesihatan mental, alat ujian kendiri', s:'Medical check-up', cap:1000},
+  {k:'med_vax', be:'G6', parent:'med', n:'Vaksinasi', s:'Vaksin', cap:1000, hint:'Mulai YA2026: semua vaksin yang berdaftar dan diluluskan KKM.'},
+  {k:'med_dental', be:'G6', parent:'med', n:'Pemeriksaan & rawatan gigi', s:'Gigi', cap:1000},
+  {k:'med_ld', be:'G8', parent:'med', n:'Anak kurang upaya pembelajaran (18 tahun ke bawah)', s:'Anak OKU pembelajaran', cap:10000,
     hint:'Naik ke RM10,000 mulai YA2026: diagnosis, intervensi awal dan rawatan pemulihan di Malaysia.'},
-  {k:'parents', g:'Kesihatan & keluarga', icon:'heart', n:'Perubatan & penjagaan ibu bapa', s:'Ibu bapa', cap:8000,
+  {k:'parents', be:'G2', g:'Kesihatan & keluarga', icon:'heart', n:'Perubatan & penjagaan ibu bapa', s:'Ibu bapa', cap:8000,
     hint:'Rawatan perubatan, keperluan khas dan penjaga untuk ibu bapa atau datuk nenek. Resit atas nama kau.'},
-  {k:'parents_check', parent:'parents', n:'Pemeriksaan penuh ibu bapa', s:'Check-up ibu bapa', cap:1000},
-  {k:'childcare', g:'Kesihatan & keluarga', icon:'baby', n:'Taska, tadika & pusat transit', s:'Taska / tadika', cap:3000,
-    hint:'Yuran taska, tadika, pusat jagaan harian atau transit berdaftar untuk anak 12 tahun ke bawah (had umur dinaikkan YA2026).'},
-  {k:'breast', g:'Kesihatan & keluarga', icon:'baby', n:'Peralatan penyusuan susu ibu', s:'Penyusuan', cap:1000,
+  {k:'parents_check', be:'G2', parent:'parents', n:'Pemeriksaan penuh ibu bapa', s:'Check-up ibu bapa', cap:1000},
+  {k:'childcare', be:'G12', g:'Kesihatan & keluarga', icon:'baby', n:'Taska, tadika & pusat transit', s:'Taska / tadika', cap:3000,
+    hint:'Taska atau tadika berdaftar: anak 6 tahun ke bawah. Mulai YA2026, pusat jagaan harian atau transit berdaftar (Akta Pusat Jagaan 1993): anak 12 tahun ke bawah. Pengasuh tak berdaftar dan yuran sekolah tak layak.'},
+  {k:'breast', be:'G11', g:'Kesihatan & keluarga', icon:'baby', n:'Peralatan penyusuan susu ibu', s:'Penyusuan', cap:1000,
     hint:'Untuk ibu bekerja sahaja, anak 2 tahun ke bawah. Sekali setiap 2 tahun.'},
-  {k:'oku_equip', g:'Kesihatan & keluarga', icon:'family', n:'Peralatan sokongan OKU', s:'Peralatan OKU', cap:6000,
+  {k:'oku_equip', be:'G3', g:'Kesihatan & keluarga', icon:'family', n:'Peralatan sokongan OKU', s:'Peralatan OKU', cap:6000,
     hint:'Peralatan sokongan asas untuk diri, pasangan, anak atau ibu bapa yang OKU.'},
-  {k:'edu', g:'Simpanan & insurans', icon:'edu', n:'Yuran pendidikan diri', s:'Pendidikan', cap:7000,
+  {k:'edu', be:'G5', g:'Simpanan & insurans', icon:'edu', n:'Yuran pendidikan diri', s:'Pendidikan', cap:7000,
     hint:'Ijazah pertama: undang-undang, perakaunan, kewangan Islam, teknikal, vokasional, sains, teknologi. Sarjana/PhD: semua bidang. Yuran LLB layak.'},
-  {k:'edu_up', parent:'edu', n:'Kursus upskilling / peningkatan diri', s:'Upskilling', cap:2000, hint:'Kursus anjuran badan yang diiktiraf. Termasuk dalam had RM7,000.'},
-  {k:'sspn', g:'Simpanan & insurans', icon:'coins', n:'Simpanan SSPN', s:'SSPN', cap:8000, hint:'Simpanan bersih: jumlah simpan tahun ini tolak pengeluaran tahun ini.'},
-  {k:'lifeins', g:'Simpanan & insurans', icon:'shield', n:'Insurans hayat / takaful keluarga', s:'Insurans hayat', cap:3000,
+  {k:'edu_up', be:'G5', parent:'edu', n:'Kursus upskilling / peningkatan diri', s:'Upskilling', cap:2000, hint:'Kursus anjuran badan yang diiktiraf. Termasuk dalam had RM7,000.'},
+  {k:'sspn', be:'G13', g:'Simpanan & insurans', icon:'coins', n:'Simpanan SSPN', s:'SSPN', cap:8000, hint:'Simpanan bersih: jumlah simpan tahun ini tolak pengeluaran tahun ini.'},
+  {k:'lifeins', be:'G17', g:'Simpanan & insurans', icon:'shield', n:'Insurans hayat / takaful keluarga', s:'Insurans hayat', cap:3000,
     hint:'Premium untuk diri, pasangan dan (mulai YA2026) anak. Berkongsi had RM7,000 dengan KWSP.'},
-  {k:'epf', g:'Simpanan & insurans', icon:'piggy', n:'KWSP (wajib & sukarela)', s:'KWSP', cap:4000, hint:'Semak jumlah dalam Borang EA atau penyata KWSP.'},
-  {k:'prs', g:'Simpanan & insurans', icon:'chart', n:'PRS & anuiti tertangguh', s:'PRS', cap:3000},
-  {k:'medins', g:'Simpanan & insurans', icon:'shield', n:'Insurans pendidikan & perubatan', s:'Insurans perubatan', cap:4000, hint:'Untuk diri, pasangan atau anak.'},
-  {k:'socso', g:'Simpanan & insurans', icon:'receipt', n:'PERKESO & SIP', s:'PERKESO', cap:350},
-  {k:'housing', g:'Rumah', icon:'home', n:'Faedah pinjaman rumah pertama', s:'Faedah rumah', cap:7000,
+  {k:'epf', be:'G17', g:'Simpanan & insurans', icon:'piggy', n:'KWSP (wajib & sukarela)', s:'KWSP', cap:4000, hint:'Semak jumlah dalam Borang EA atau penyata KWSP.'},
+  {k:'prs', be:'G18', g:'Simpanan & insurans', icon:'chart', n:'PRS & anuiti tertangguh', s:'PRS', cap:3000},
+  {k:'medins', be:'G19', g:'Simpanan & insurans', icon:'shield', n:'Insurans pendidikan & perubatan', s:'Insurans perubatan', cap:4000, hint:'Untuk diri, pasangan atau anak.'},
+  {k:'socso', be:'G20', g:'Simpanan & insurans', icon:'receipt', n:'PERKESO & SIP', s:'PERKESO', cap:350},
+  {k:'housing', be:'G22', g:'Rumah', icon:'home', n:'Faedah pinjaman rumah pertama', s:'Faedah rumah', cap:7000,
     hint:'Rumah kediaman pertama, SPA ditandatangani 2025 hingga 2027. RM7,000 kalau harga ≤ RM500k, RM5,000 kalau RM500k hingga RM750k. 3 tahun taksiran berturut.'}
 ];
 const SPECIAL = {
-  donation:{n:'Derma / wakaf (institusi diluluskan)', s:'Derma', hint:'Tolakan, had 10% pendapatan agregat. Perlu resit dengan no. rujukan kelulusan LHDN.'},
+  donation:{be:'Derma', n:'Derma / wakaf (institusi diluluskan)', s:'Derma', hint:'Tolakan, had 10% pendapatan agregat. Perlu resit dengan no. rujukan kelulusan LHDN.'},
   zakat:{n:'Zakat / fitrah (rebat)', s:'Zakat', hint:'Rebat penuh, tolak terus dari cukai kena bayar.'},
   pcb:{n:'PCB / MTD (cukai dah dipotong)', s:'PCB', hint:'Bukan relief. Dikira sebagai cukai yang dah dibayar.'}
 };
@@ -436,12 +436,12 @@ const DEFAULT_CATS = [
   {name:'Barang dapur',type:'out',icon:'cart',color:'#c97b3d',relief:'',budget:0},
   {name:'Rumah',type:'out',icon:'home',color:'#5b6b7f',relief:'',budget:0},
   {name:'Bil & utiliti',type:'out',icon:'bills',color:'#3aa98f',relief:'',budget:0},
-  {name:'Telefon & internet',type:'out',icon:'wifi',color:'#0fa3b1',relief:'life',budget:0},
+  {name:'Telefon & internet',type:'out',icon:'wifi',color:'#0fa3b1',relief:'',budget:0},
   {name:'Minyak kereta',type:'out',icon:'fuel',color:'#e0533d',relief:'',budget:0},
   {name:'Belanja kereta',type:'out',icon:'car',color:'#e0533d',relief:'',budget:0},
   {name:'Tol & Touch \'n Go',type:'out',icon:'toll',color:'#2a78d6',relief:'',budget:0},
   {name:'Travel',type:'out',icon:'plane',color:'#e8618c',relief:'',budget:0},
-  {name:'Kesihatan',type:'out',icon:'health',color:'#e0533d',relief:'med',budget:0},
+  {name:'Kesihatan',type:'out',icon:'health',color:'#e0533d',relief:'',budget:0},
   {name:'Insurans & takaful',type:'out',icon:'shield',color:'#43a047',relief:'',budget:0},
   {name:'Pendidikan diri',type:'out',icon:'edu',color:'#7c5cd6',relief:'edu',budget:0},
   {name:'Sekolah & taska anak',type:'out',icon:'baby',color:'#f0a531',relief:'',budget:0},
@@ -470,6 +470,14 @@ const DEFAULT_CATS = [
   {name:'PCB / MTD',type:'ded',icon:'bills',color:'#5b6b7f',relief:'pcb'},
   {name:'Zakat potongan gaji',type:'ded',icon:'heart',color:'#5b6b7f',relief:'zakat'}
 ];
+const CAT_HINT = {
+  'Kesihatan':'Jumpa doktor sebab demam atau selsema tak boleh claim. Check-up penuh, vaksin, gigi, penyakit serius atau rawatan kesuburan: pilih relief perubatan yang sesuai.',
+  'Telefon & internet':'Bil internet atas nama kau boleh masuk Gaya hidup. Bil panggilan telefon biasa tak tersenarai, jadi biarkan "Tiada".',
+  'Sekolah & taska anak':'Yuran sekolah tak boleh claim. Taska atau tadika (anak 6 tahun ke bawah), atau pusat jagaan / transit berdaftar (anak 12 tahun ke bawah): pilih relief Taska.',
+  'Gadget & buku':'Layak: buku, majalah, komputer, telefon pintar dan tablet. Aksesori, TV, kamera dan jam pintar tak tersenarai.',
+  'Insurans & takaful':'Pilih ikut jenis polisi: insurans hayat / takaful keluarga, atau insurans perubatan & pendidikan. Rujuk penyata premium dari syarikat insurans.',
+  'Sukan & gym':'Peralatan sukan, yuran gym, sewa gelanggang dan yuran latihan. Pakaian dan kasut sukan tak layak untuk YA2026.'
+};
 const INC_HINT = {
   'Dividen':'Dividen syarikat Malaysia biasanya dikecualikan cukai. Dividen melebihi RM100k setahun kena cukai 2%.',
   'Gaji / elaun pengarah':'Rekod gaji kasar. Masukkan KWSP, PERKESO, PCB sebagai "Potongan gaji".',
@@ -554,19 +562,20 @@ const isTaxableIncome=t=>{const c=catOf(t.cat,'in');if(typeof c.taxable==='boole
 /* ================= RELIEF LOGIC ================= */
 function kidsAges(y){return (prof().kids||[]).filter(k=>k.year).map(k=>({...k,age:y-(+k.year)})).filter(k=>k.age>=0);}
 function fixedReliefs(y){
-  const p=prof(),out=[{k:'self',n:'Individu & saudara tanggungan',amt:9000,why:'Diberi kepada semua, automatik'}];
-  if(p.married&&!p.spouseIncome)out.push({k:'spouse',n:'Suami / isteri',amt:4000,why:'Pasangan tiada pendapatan sendiri'});
-  if(p.disSelf)out.push({k:'disSelf',n:'Individu OKU',amt:7000,why:'Kau OKU berdaftar'});
-  if(p.married&&p.disSpouse)out.push({k:'disSpouse',n:'Pasangan OKU',amt:6000,why:'Pasangan OKU berdaftar'});
+  const p=prof(),out=[{k:'self',be:'G1',n:'Individu & saudara tanggungan',amt:9000,why:'Diberi kepada semua, automatik'}];
+  if(p.married&&!p.spouseIncome)out.push({k:'spouse',be:'G14',n:'Suami / isteri',amt:4000,why:'Pasangan tiada pendapatan sendiri'});
+  if(p.disSelf)out.push({k:'disSelf',be:'G4',n:'Individu OKU',amt:7000,why:'Kau OKU berdaftar'});
+  if(p.married&&p.disSpouse)out.push({k:'disSpouse',be:'G15',n:'Pasangan OKU',amt:6000,why:'Pasangan OKU berdaftar'});
   let u18=[],pre=[],ipt=[],oku=[];
   kidsAges(y).forEach(k=>{if(k.oku)oku.push(k);else if(k.age<18)u18.push(k);else if(k.ipt)ipt.push(k);else if(k.preU)pre.push(k);});
   const names=a=>a.map(k=>k.name||'Anak').join(', ');
-  if(u18.length)out.push({k:'kU18',n:'Anak bawah 18 tahun',amt:2000*u18.length,why:`${u18.length} anak · ${names(u18)}`});
-  if(pre.length)out.push({k:'k18',n:'Anak 18+ pra-universiti',amt:2000*pre.length,why:names(pre)});
-  if(ipt.length)out.push({k:'kIPT',n:'Anak 18+ di IPT',amt:8000*ipt.length,why:names(ipt)});
-  if(oku.length)out.push({k:'kOKU',n:'Anak OKU',amt:oku.reduce((s,k)=>s+8000+(k.age>=18&&k.ipt?8000:0),0),why:names(oku)});
+  if(u18.length)out.push({k:'kU18',be:'G16a',n:'Anak bawah 18 tahun',amt:2000*u18.length,why:`${u18.length} anak · ${names(u18)}`});
+  if(pre.length)out.push({k:'k18',be:'G16b',n:'Anak 18+ pra-universiti',amt:2000*pre.length,why:names(pre)});
+  if(ipt.length)out.push({k:'kIPT',be:'G16b',n:'Anak 18+ di IPT',amt:8000*ipt.length,why:names(ipt)});
+  if(oku.length)out.push({k:'kOKU',be:'G16c',n:'Anak OKU',amt:oku.reduce((s,k)=>s+8000+(k.age>=18&&k.ipt?8000:0),0),why:names(oku)});
   return out;
 }
+const beOf=R=>R&&R.be?R.be:'Petak baru';
 function reliefCap(R,y){if(R.k==='housing'){const f=prof().firstHome;return f==='5000'?5000:7000;}return R.cap;}
 function suggestions(y,rows){
   const p=prof(),ks=kidsAges(y),out=[];
@@ -809,8 +818,8 @@ function taxEbe(c){
   const empInc=emp.reduce((s,k)=>s+(c.byInc[k]||0),0),rent=c.byInc['Sewa']||0,biz=c.byInc['Freelance / sampingan']||0,div=c.byInc['Dividen']||0;
   const other=Math.max(0,c.incTax-empInc-rent-biz);
   const line=(k,v,sub)=>`<span class="k">${esc(k)}${sub?`<span class="sub" style="display:block">${esc(sub)}</span>`:''}</span><span class="v num">${RM(v)}</span><button class="cp" data-copy="${(Math.round(v*100)/100).toFixed(2)}" aria-label="Salin ${esc(k)}">Salin</button>`;
-  const rels=[];c.fixed.filter(f=>f.k!=='self').forEach(f=>rels.push([f.n,f.amt]));
-  RELIEFS.filter(R=>!R.parent).forEach(R=>{const r=c.rows[R.k];if(r.allowed>0)rels.push([R.n,r.allowed,RELIEFS.filter(C=>C.parent===R.k&&c.rows[C.k].allowed>0).map(C=>`${C.s} ${RM0(c.rows[C.k].allowed)}`).join(', ')]);});
+  const rels=[];c.fixed.filter(f=>f.k!=='self').forEach(f=>rels.push([f.be+' · '+f.n,f.amt]));
+  RELIEFS.filter(R=>!R.parent).forEach(R=>{const r=c.rows[R.k];if(r.allowed>0)rels.push([beOf(R)+' · '+R.n,r.allowed,RELIEFS.filter(C=>C.parent===R.k&&c.rows[C.k].allowed>0).map(C=>`${C.s} ${RM0(c.rows[C.k].allowed)}`).join(', ')]);});
   const filed=c.st.filed;
   return `<div class="card"><div class="card-h"><h2>Anggaran cukai YA${y}</h2><small>Borang BE · hantar ${y+1}</small></div>
       <div class="calc num"><span class="k">Pendapatan bercukai</span><span class="v">${RM(c.incTax)}</span>
@@ -833,7 +842,7 @@ function taxEbe(c){
       <span class="h">Pendapatan</span>${line('Pendapatan penggajian',empInc,'Gaji, fi pengarah, bonus · semak dengan Borang EA')}
       ${rent?line('Pendapatan sewa',rent):''}${other?line('Pendapatan lain',other):''}${c.donAllowed?line('Derma / hadiah diluluskan',c.donAllowed,'Had 10% pendapatan agregat'):''}
       ${div?`<span class="w">Dividen ${RM(div)}: dikecualikan cukai. Hanya dividen melebihi RM100k setahun perlu dilapor untuk cukai 2%.</span>`:''}
-      <span class="h">Pelepasan</span><span class="w">Individu RM9,000 diberi automatik.</span>
+      <span class="h">Pelepasan</span><span class="w">Nombor petak ikut Borang BE YA2025. Semak semula bila borang YA${y} keluar. G1 Individu RM9,000 diberi automatik.</span>
       ${rels.length?rels.map(([n,v,sub])=>line(n,v,sub)).join(''):'<span class="w">Belum ada relief direkod.</span>'}
       <span class="h">Rebat & cukai dah dibayar</span>${c.zakat?line('Zakat / fitrah',c.zakat):''}${line('PCB / potongan cukai bulanan',c.pcb,'Semak dengan Borang EA')}</div>
     <div style="margin-top:14px;padding-top:12px;border-top:1px solid var(--line)">
@@ -859,7 +868,7 @@ function syncForm(){
   const isIn=S.type==='in',rel=$('#fRel').value;
   $('#relWrap').style.display=isIn?'none':'';$('#claimWrap').style.display=(!isIn&&rel&&rel!=='pcb')?'':'none';
   $('#methodWrap').style.display=S.type==='out'?'':'none';$('#rcptWrap').style.display=S.type==='ded'?'none':'';
-  $('#relHint').textContent=isIn?'':(RMAP[rel]?.hint||SPECIAL[rel]?.hint||(rel?'':'Pilih relief kalau belanja ni boleh claim. Kategori yang dipautkan akan pilih sendiri.'));
+  $('#relHint').textContent=isIn?'':(rel?(RMAP[rel]?.hint||SPECIAL[rel]?.hint||''):(CAT_HINT[S.cat]||'Pilih relief kalau belanja ni boleh claim. Kategori yang dipautkan akan pilih sendiri.'));
   $('#fDesc').placeholder=isIn?(INC_HINT[S.cat]?'cth: Elaun pengarah Nov':'cth: Sewa rumah Nov'):(S.type==='ded'?'cth: KWSP Nov':'cth: Gofood');
 }
 function renderReceipt(){
@@ -925,7 +934,7 @@ function closeG(){$('#gOverlay').classList.remove('on');$('#gOverlay').setAttrib
 function openRelief(k){
   const c=calc(S.year),R=RMAP[k],r=c.rows[k],ic=reliefIcon(R),subs=RELIEFS.filter(x=>x.parent===k),items=(r.allItems||r.items).slice().sort((a,b)=>(b.date||'').localeCompare(a.date||''));
   const linked=cats().filter(x=>x.relief===k||subs.some(s=>s.k===x.relief)).map(x=>x.name);
-  const html=`<div class="keep" style="margin-bottom:12px">${icBox(ic)}<div style="flex:1"><div class="sub">${esc(R.g||RMAP[R.parent]?.g||'')}</div><b class="num">${RM(r.allowed)} <span class="sub" style="font-family:var(--body);font-weight:400">daripada ${RM0(r.cap)}</span></b></div></div>
+  const html=`<div class="keep" style="margin-bottom:12px">${icBox(ic)}<div style="flex:1"><div class="sub">${esc(R.g||RMAP[R.parent]?.g||'')} · Petak e-BE ${esc(beOf(R))}</div><b class="num">${RM(r.allowed)} <span class="sub" style="font-family:var(--body);font-weight:400">daripada ${RM0(r.cap)}</span></b></div></div>
     <div class="prog" style="height:9px"><i class="${r.allowed>=r.cap?'full':'acc'}" style="width:${Math.min(100,r.allowed/r.cap*100)}%"></i></div>
     <p style="margin:14px 0 6px;font-weight:600">Apa yang layak</p><p class="note" style="margin:0;font-size:.88rem;color:var(--ink-2)">${esc(R.hint||'Rujuk senarai rasmi LHDN.')}</p>
     ${subs.length?`<p style="margin:14px 0 6px;font-weight:600">Had kecil dalam relief ni</p>${subs.map(s=>{const sr=c.rows[s.k];return `<div class="docrow"><span>${esc(s.n)}${s.hint?`<span class="sub" style="display:block">${esc(s.hint)}</span>`:''}</span><span class="num" style="white-space:nowrap">${RM0(sr.allowed)} / ${RM0(s.cap)}</span></div>`;}).join('')}`:''}
@@ -1087,14 +1096,15 @@ function analyseImport(text){
   const col=re=>head.findIndex(h=>re.test(h));
   const iD=col(/^date|tarikh/),iT=col(/^type$|^jenis/),iC=col(/category|kategori/),iA=col(/^amount|jumlah|^value/),iN=col(/^note|nota|description|keterangan/);
   if(iD<0||iA<0||iC<0){$('#impBody').innerHTML=`<p class="banner">Tak jumpa lajur Date, Category dan Amount. Lajur dalam fail: ${esc(rows[0].join(', '))}</p>`;return;}
-  const recs=[];let skipped=0;
+  const recs=[],seen={};let skipped=0;
   for(const r of rows.slice(1)){
     const date=parseDate(r[iD]),amt=parseAmt(r[iA]);if(!date||!isFinite(amt)||amt===0){skipped++;continue;}
     const tt=String(iT>=0?r[iT]:'').toLowerCase();
     if(/transfer|pindahan antara/.test(tt)){skipped++;continue;}
     const type=/income|pendapatan|masuk/.test(tt)?'in':/expense|perbelanjaan|keluar/.test(tt)?'out':(amt<0?'out':'in');
     const cat=String(r[iC]||'').trim()||'Lain-lain',note=iN>=0?String(r[iN]||'').trim():'';
-    recs.push({date,type,amount:Math.abs(amt),srcCat:cat,desc:note,srcKey:hashKey([date,type,Math.abs(amt),cat,note].join('|'))});
+    const base=[date,type,Math.abs(amt),cat,note].join('|');seen[base]=(seen[base]||0)+1;
+    recs.push({date,type,amount:Math.abs(amt),srcCat:cat,desc:note,srcKey:hashKey(base+'#'+seen[base])});
   }
   const have=new Set(S.txns.map(t=>t.srcKey).filter(Boolean));
   const fresh=recs.filter(r=>!have.has(r.srcKey)),dup=recs.length-fresh.length;
@@ -1103,12 +1113,12 @@ function analyseImport(text){
   const dates=fresh.map(r=>r.date).sort();
   const opts=(g)=>{const list=catsOf(g.type);const match=guessCat(g.name,g.type);
     return `<option value="__new__" ${match?'':'selected'}>Buat baru: ${esc(g.name)}</option>`+list.map(c=>`<option value="${esc(c.name)}" ${match===c.name?'selected':''}>${esc(c.name)}${c.relief?' · '+esc(relLabel(c.relief)):''}</option>`).join('');};
-  $('#impBody').innerHTML=fresh.length?`<div class="card" style="padding:12px"><b>${fresh.length} rekod baru</b> <span class="sub">· ${dates[0]} hingga ${dates[dates.length-1]}</span>
+  $('#impBody').innerHTML=(S.v4?'':`<p class="banner" style="margin:0 0 10px">Kod pelayan belum versi 4. Import tetap jalan, tapi kalau kau import fail yang sama lagi lepas tutup app, rekod boleh berganda.</p>`)+(fresh.length?`<div class="card" style="padding:12px"><b>${fresh.length} rekod baru</b> <span class="sub">· ${dates[0]} hingga ${dates[dates.length-1]}</span>
       <div class="sub">${fresh.filter(r=>r.type==='out').length} keluar, ${fresh.filter(r=>r.type==='in').length} masuk${dup?` · ${dup} dah ada, dilangkau`:''}${skipped?` · ${skipped} baris dilangkau (pindahan / kosong)`:''}</div></div>
     <p style="margin:14px 0 4px;font-weight:600">Padankan kategori Spendee</p><p class="note" style="margin:0 0 6px">Pilih kategori yang ada relief supaya belanja lama terus masuk kuota cukai.</p>
     ${Object.entries(groups).map(([k,g])=>`<div class="field" style="margin-bottom:8px"><label>${esc(g.name)} <span class="sub">· ${g.type==='in'?'masuk':'keluar'} · ${g.n} rekod · ${RM(g.sum)}</span></label><select data-impmap="${esc(k)}">${opts(g)}</select></div>`).join('')}
     <button class="btn pri block" id="impBtn" data-act="impgo" style="margin-top:8px">Import ${fresh.length} rekod</button>`
-    :`<p class="banner">${dup?'Semua rekod dalam fail ni dah diimport sebelum ni.':'Tiada rekod yang boleh diimport.'}</p>`;
+    :`<p class="banner">${dup?'Semua rekod dalam fail ni dah diimport sebelum ni.':'Tiada rekod yang boleh diimport.'}</p>`);
 }
 async function doImport(){
   const imp=G.imp;if(!imp)return;const btn=$('#impBtn');btn.disabled=true;
@@ -1143,11 +1153,11 @@ async function exportZip(){
     c.tx.slice().sort((a,b)=>(a.date||'').localeCompare(b.date||'')).forEach(t=>recs.push([t.date,{in:'Masuk',out:'Keluar',ded:'Potongan gaji'}[t.type],t.cat,t.desc||'',+t.amount,t.relief?relName(t.relief):'',t.relief&&t.relief!=='pcb'?claimOf(t):'',t.method||'',rcpts(t).length||(needsRcpt(t)?'TIADA':''),(pathOf[t.id]||[]).join(' ; '),t.note||'']));
     const ws1=X.utils.aoa_to_sheet(recs);ws1['!cols']=[{wch:11},{wch:13},{wch:22},{wch:28},{wch:12},{wch:30},{wch:14},{wch:12},{wch:9},{wch:50},{wch:20}];
     X.utils.book_append_sheet(wb,ws1,'Rekod '+y);
-    const rel=[['Ringkasan cukai YA'+y],['Dijana',todayStr()],[],['Perkara','Had (RM)','Boleh claim (RM)','Nota']];
-    c.fixed.forEach(f=>rel.push([f.n,f.amt,f.amt,f.why]));
-    RELIEFS.forEach(R=>{const r=c.rows[R.k];if(!r.raw&&!(R.parent?0:r.sum))return;rel.push([(R.parent?'   ↳ ':'')+R.n,r.cap,r.allowed,(R.parent?r.raw:r.gross)>r.cap?'Melebihi had, dihadkan':'']);});
-    rel.push([],['Jumlah relief','',c.reliefTotal],['Pendapatan bercukai','',c.incTax],['Derma diluluskan','',c.donAllowed],['Pendapatan bercukai bersih','',c.charge],['Cukai ikut kadar','',c.tax],['Rebat individu','',c.rebate],['Rebat zakat','',c.zak],['Cukai kena bayar','',c.net],['PCB dah dibayar','',c.pcb],[c.bal>0?'Perlu bayar lagi':'Bayaran balik','',Math.abs(c.bal)],[],['Simpan rekod & resit sehingga',keepUntil(y)]);
-    const ws2=X.utils.aoa_to_sheet(rel);ws2['!cols']=[{wch:46},{wch:12},{wch:16},{wch:24}];X.utils.book_append_sheet(wb,ws2,'Ringkasan relief');
+    const rel=[['Ringkasan cukai YA'+y],['Dijana',todayStr()],[],['Petak BE','Perkara','Had (RM)','Boleh claim (RM)','Nota']];
+    c.fixed.forEach(f=>rel.push([f.be,f.n,f.amt,f.amt,f.why]));
+    RELIEFS.forEach(R=>{const r=c.rows[R.k];if(!r.raw&&!(R.parent?0:r.sum))return;rel.push([beOf(R),(R.parent?'   ↳ ':'')+R.n,r.cap,r.allowed,(R.parent?r.raw:r.gross)>r.cap?'Melebihi had, dihadkan':'']);});
+    rel.push([],...[['Jumlah relief',c.reliefTotal],['Pendapatan bercukai',c.incTax],['Derma diluluskan',c.donAllowed],['Pendapatan bercukai bersih',c.charge],['Cukai ikut kadar',c.tax],['Rebat individu',c.rebate],['Rebat zakat',c.zak],['Cukai kena bayar',c.net],['PCB dah dibayar',c.pcb],[c.bal>0?'Perlu bayar lagi':'Bayaran balik',Math.abs(c.bal)]].map(([k,v])=>['',k,'',v]),[],['','Simpan rekod & resit sehingga',keepUntil(y)],['','Nombor petak ikut Borang BE YA2025. Semak semula dengan borang YA'+y+'.']);
+    const ws2=X.utils.aoa_to_sheet(rel);ws2['!cols']=[{wch:10},{wch:46},{wch:12},{wch:16},{wch:24}];X.utils.book_append_sheet(wb,ws2,'Ringkasan relief');
     const mon=[['Bulan','Masuk (RM)','Keluar + potongan (RM)','Bersih (RM)']];for(let m=1;m<=12;m++){const s=monthSums(y+'-'+pad2(m));mon.push([MONTHS_L[m-1],s.inc,s.out,s.net]);}
     X.utils.book_append_sheet(wb,X.utils.aoa_to_sheet(mon),'Bulanan');
     const cat=[['Kategori','Jenis','Relief dipautkan','Jumlah setahun (RM)']];const tot={};c.tx.forEach(t=>{const k=t.type+'|'+t.cat;tot[k]=(tot[k]||0)+(+t.amount||0);});
@@ -1273,6 +1283,7 @@ async function loadAll(){
   const L=$('#loading');L.classList.remove('off','err');$('#loadMsg').textContent='Memuatkan rekod…';
   const d=await run('load');
   S.txns=d.txns||[];S.settings=d.settings&&typeof d.settings==='object'?d.settings:{years:{}};if(!S.settings.years)S.settings.years={};
+  S.v4=!S.txns.length||('srcKey' in S.txns[0]);migrate4();
   S.links={sheet:d.sheetUrl,folder:d.folderUrl};
   L.classList.add('off');render();
 }
@@ -1288,6 +1299,15 @@ async function boot(){
 }
 if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));}
 boot();
+
+/* v4: buang pautan automatik yang boleh buat tuntutan berlebihan */
+function migrate4(){
+  const st=S.settings;if(st.mig4)return;st.mig4=true;
+  if(Array.isArray(st.categories))st.categories.forEach(c=>{
+    if(c.type==='out'&&c.name==='Kesihatan'&&c.relief==='med')c.relief='';
+    if(c.type==='out'&&c.name==='Telefon & internet'&&c.relief==='life')c.relief='';});
+  run('saveSettings',JSON.parse(JSON.stringify(st))).catch(()=>{});
+}
 </script>
 </body>
 </html>
