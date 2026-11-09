@@ -1230,7 +1230,7 @@ function applyScan(r){
   const items=(r.items||[]).slice(0,15);
   const verdict=rel?`Boleh claim: <b>${esc(relName(rel))}</b>${RMAP[rel]?.be?' ('+esc(RMAP[rel].be)+')':''} · ${RM(r.claim>0?r.claim:total)}`:'Tiada relief yang layak dalam resit ni.';
   box.className='aibox';
-  box.innerHTML=`<div class="aih">✓ AI dah baca resit</div>${fx?`<div style="margin-top:6px">Resit dalam <b>${esc(fx.currency)} ${fmt(fx.total)}</b> → ${RM(+r.total||0)}<span class="sub" style="display:block">Kadar ${esc(String(fx.rate))} pada ${esc(fx.date||'')} (${esc(fx.source||'')}). Semak dengan penyata kad kalau nak tepat.</span></div>`:''}<div style="margin-top:6px">${verdict}</div>
+  box.innerHTML=`<div class="aih">✓ AI dah baca resit${r.secs?` <span style="font-weight:400;color:var(--muted);font-size:.78rem">· ${r.secs} saat</span>`:''}</div>${fx?`<div style="margin-top:6px">Resit dalam <b>${esc(fx.currency)} ${fmt(fx.total)}</b> → ${RM(+r.total||0)}<span class="sub" style="display:block">Kadar ${esc(String(fx.rate))} pada ${esc(fx.date||'')} (${esc(fx.source||'')}). Semak dengan penyata kad kalau nak tepat.</span></div>`:''}<div style="margin-top:6px">${verdict}</div>
     ${items.length?`<ul>${items.map(i=>`<li><span class="${i.relief?'ok':'no'}">${i.relief?'✓':'·'}</span><span class="d">${esc(i.desc||'')}${i.why?`<small>${esc(i.why)}</small>`:''}</span><span class="num">${RM(+i.amount||0)}</span></li>`).join('')}</ul>`:''}
     ${r.reason?`<p class="why">${esc(r.reason)}</p>`:''}<p class="why" style="font-size:.76rem">Semak dulu sebelum tekan Simpan. AI boleh tersilap.</p>`;
 }
