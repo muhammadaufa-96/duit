@@ -256,6 +256,13 @@ nav.bar .cam svg{width:26px;height:26px}
 .pin .tip2{font-size:.78rem;color:var(--hero-mut);text-align:center;max-width:300px}
 @media (max-width:400px){.hero .big{font-size:2.05rem}.two{grid-template-columns:1fr}}
 @media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}}
+.aibox{margin:2px 0 14px;padding:12px;border-radius:14px;background:var(--accent-soft);color:var(--ink);font-size:.86rem}
+.aibox .aih{display:flex;align-items:center;gap:8px;font-weight:600;color:var(--accent)}
+.aibox .aih .spin{width:16px;height:16px;border-width:2px;margin:0}
+.aibox ul{list-style:none;margin:8px 0 0;padding:0}.aibox li{display:flex;gap:8px;padding:4px 0;border-top:1px solid var(--line)}
+.aibox li:first-child{border-top:0}.aibox li .ok{color:var(--good);font-weight:700;min-width:14px}.aibox li .no{color:var(--muted);min-width:14px}
+.aibox li span.d{flex:1;min-width:0}.aibox li small{display:block;color:var(--muted)}.aibox .why{margin:8px 0 0;color:var(--ink-2)}
+.aibox.err{background:var(--warn-soft);color:var(--warn)}
 </style>
 </head>
 <body>
@@ -308,6 +315,7 @@ nav.bar .cam svg{width:26px;height:26px}
         <button type="button" data-type="ded" aria-pressed="false">Potongan gaji</button>
       </div>
       <label class="amtrow" for="fAmt"><span>RM</span><input id="fAmt" class="num" inputmode="decimal" placeholder="0.00" autocomplete="off" aria-label="Jumlah dalam RM"></label>
+      <div class="aibox" id="aiBox" hidden aria-live="polite"></div>
       <div class="field"><label>Kategori</label><div class="catgrid" id="catGrid" role="group" aria-label="Kategori"></div></div>
       <div class="two">
         <div class="field"><label for="fDate">Tarikh</label><input id="fDate" type="date"></div>
@@ -524,10 +532,10 @@ async function call(body,timeout){
   finally{clearTimeout(tm);}
 }
 async function run(fn,...args){
-  const long=['saveTx','uploadDocs','importTx','exportZip'].includes(fn);
+  const long=['saveTx','uploadDocs','importTx','exportZip','scanReceipt','setAiKey'].includes(fn);
   const j=await call({fn,args,token:TOKEN},long?300000:30000);
   if(!j.ok){if(j.error==='AUTH'){saveToken(null);showPin('login');throw new Error('Sila masukkan PIN semula.');}
-    if(/Fungsi tak dikenali/.test(j.error||''))throw new Error('Kod Google perlu dikemas kini ke versi 3 (Tetapan → Pautan pelayan).');
+    if(/Fungsi tak dikenali/.test(j.error||''))throw new Error('Kod Google perlu dikemas kini ke versi terbaru (Code.gs VERSI 5 dalam Drive).');
     throw new Error(j.error||'Ralat');}
   return j.data;
 }
@@ -877,10 +885,10 @@ function renderReceipt(){
   const pend=S.files.map((f,i)=>`<div class="ritem"><div class="im" ${f._url?`style="background-image:url('${f._url}')"`:''}>${f._url?'':'Baru'}</div><span class="nm">${esc(f.name)}</span><button type="button" class="btn sm" data-rm-f="${i}">Batal</button></div>`).join('');
   $('#rcptCur').innerHTML=cur+pend;
 }
-function addFiles(list){[...list].forEach(f=>{try{if(f.type.startsWith('image/'))f._url=URL.createObjectURL(f);}catch(_){}S.files.push(f);});renderReceipt();}
+function addFiles(list){const arr=[...list];arr.forEach(f=>{try{if(f.type.startsWith('image/'))f._url=URL.createObjectURL(f);}catch(_){}S.files.push(f);});renderReceipt();maybeScan(arr);}
 function openForm(t,preset){
   preset=preset||{};
-  S.edit=t||null;S.files=[];S.formR=t?rcpts(t).map(r=>({...r})):[];S.relTouched=!!t||!!preset.relief;S.confirmDel=false;
+  S.edit=t||null;S.files=[];S.scanned=false;S.scanTok=(S.scanTok||0)+1;$('#aiBox').hidden=true;$('#aiBox').innerHTML='';S.formR=t?rcpts(t).map(r=>({...r})):[];S.relTouched=!!t||!!preset.relief;S.confirmDel=false;
   S.type=t?.type||preset.type||'out';S.cat=t?.cat||preset.cat||'';
   fillCatGrid();fillRel();
   $('#sheetTitle').textContent=t?'Ubah rekod':'Rekod baru';
@@ -975,13 +983,14 @@ function openSettings(){
   const html=`<div>
     <button class="navrow" data-act="profile"><span>Tentang kau<small>Kahwin, anak, rumah pertama untuk relief automatik</small></span><span>›</span></button>
     <button class="navrow" data-act="cats"><span>Kategori & bajet<small>Ikon, warna, relief dipautkan, bajet bulanan</small></span><span>›</span></button>
+    <button class="navrow" data-act="ai"><span>Bacaan resit AI<small>${S.ai?'Aktif · snap resit, AI isi sendiri':'Belum aktif · percuma dengan Gemini'}</small></span><span>›</span></button>
     <button class="navrow" data-act="import"><span>Import dari Spendee<small>Fail CSV dari Spendee</small></span><span>›</span></button>
     <button class="navrow" data-act="server"><span>Pautan pelayan Google<small>Tukar kalau deploy baru</small></span><span>›</span></button>
     ${S.links.sheet?`<a class="navrow" href="${esc(S.links.sheet)}" target="_blank" rel="noopener" style="color:inherit;text-decoration:none"><span>Buka Google Sheet<small>Semua rekod</small></span><span>↗</span></a>`:''}
     ${S.links.folder?`<a class="navrow" href="${esc(S.links.folder)}" target="_blank" rel="noopener" style="color:inherit;text-decoration:none"><span>Buka folder Drive<small>Semua resit & export</small></span><span>↗</span></a>`:''}
     <button class="navrow" data-act="chgpin"><span>Tukar PIN</span><span>›</span></button>
     <button class="navrow" data-act="lock"><span>Kunci app sekarang</span><span>›</span></button></div>
-    <p class="note" style="margin-top:14px">Duit v3 · ${isStandalone()?'Dipasang sebagai app':'Pasang: Safari → Share → Add to Home Screen'}</p>`;
+    <p class="note" style="margin-top:14px">Duit v5 · ${isStandalone()?'Dipasang sebagai app':'Pasang: Safari → Share → Add to Home Screen'}</p>`;
   openG('settings','Profil & tetapan',html);
 }
 function openServer(){
@@ -1172,6 +1181,74 @@ async function exportZip(){
   }catch(e){toast('Export gagal: '+(e.message||'cuba lagi'));}
   finally{const b=$('#zipBtn');if(b){b.disabled=false;b.textContent=`Jana pakej ZIP YA${y}`;}}
 }
+/* ================= AI BACA RESIT ================= */
+function reliefBrief(){
+  return RELIEFS.map(R=>({k:R.k,n:R.n,cap:R.cap,parent:R.parent||'',hint:R.hint||''}))
+    .concat([{k:'zakat',n:SPECIAL.zakat.n,cap:0,parent:'',hint:'Resit zakat atau fitrah dari pusat zakat.'},
+             {k:'donation',n:SPECIAL.donation.n,cap:0,parent:'',hint:SPECIAL.donation.hint}]);
+}
+function maybeScan(files){
+  if(S.scanned||S.type!=='out')return;
+  if(!S.ai){if(!ls.get('ai_tip')){ls.set('ai_tip','1');const b=$('#aiBox');b.hidden=false;b.className='aibox';b.innerHTML='<div class="why" style="margin:0">Nak AI baca resit dan isi semua ni sendiri? Aktifkan percuma di Profil → Bacaan resit AI.</div>';}return;}
+  const f=[...files].find(x=>/^image\/|pdf$/.test(x.type||'')||/\.(jpe?g|png|heic|webp|pdf)$/i.test(x.name||''));
+  if(!f)return;S.scanned=true;scanReceipt(f);
+}
+async function scanReceipt(file){
+  const box=$('#aiBox');box.hidden=false;box.className='aibox';
+  box.innerHTML='<div class="aih"><span class="spin"></span>AI sedang baca resit…</div><div class="why">Biasanya 5 hingga 10 saat. Kau boleh terus isi kalau nak.</div>';
+  const tok=S.scanTok=(S.scanTok||0)+1;
+  try{
+    const [f]=await packFiles([file]);
+    const ctx={year:S.year,cats:catsOf('out').map(c=>c.name),reliefs:reliefBrief()};
+    const r=await run('scanReceipt',f,ctx);
+    if(tok!==S.scanTok||!$('#txOverlay').classList.contains('on'))return;
+    applyScan(r||{});
+  }catch(e){
+    if(tok!==S.scanTok)return;
+    box.className='aibox err';box.innerHTML=`<div>AI tak dapat baca resit ni: ${esc(e.message||'cuba lagi')}. Isi manual, resit tetap disimpan.</div>`;
+  }
+}
+function applyScan(r){
+  const box=$('#aiBox');
+  if(r.readable===false){box.className='aibox err';box.innerHTML='<div>Gambar ni tak nampak macam resit, atau terlalu kabur. Cuba snap semula dengan cahaya yang cukup.</div>';return;}
+  const amt=$('#fAmt');
+  if(r.total>0&&!(parseAmt(amt.value)>0))amt.value=(+r.total).toFixed(2);
+  if(!S.edit&&/^\d{4}-\d{2}-\d{2}$/.test(r.date||''))$('#fDate').value=r.date;
+  if(r.merchant&&!$('#fDesc').value.trim())$('#fDesc').value=r.merchant+(r.summary?' · '+r.summary:'');
+  if(!S.edit&&r.category&&catsOf('out').some(c=>c.name===r.category)){S.cat=r.category;}
+  const rel=(r.relief&&(RMAP[r.relief]||SPECIAL[r.relief]))?r.relief:'';
+  if(!S.relTouched)$('#fRel').value=rel;
+  const total=parseAmt(amt.value)||+r.total||0;
+  if(rel&&$('#fRel').value===rel&&r.claim>0&&total>0&&r.claim<total-0.009)$('#fClaim').value=(+r.claim).toFixed(2);
+  syncForm();
+  const items=(r.items||[]).slice(0,15);
+  const verdict=rel?`Boleh claim: <b>${esc(relName(rel))}</b>${RMAP[rel]?.be?' ('+esc(RMAP[rel].be)+')':''} · ${RM(r.claim>0?r.claim:total)}`:'Tiada relief yang layak dalam resit ni.';
+  box.className='aibox';
+  box.innerHTML=`<div class="aih">✓ AI dah baca resit</div><div style="margin-top:6px">${verdict}</div>
+    ${items.length?`<ul>${items.map(i=>`<li><span class="${i.relief?'ok':'no'}">${i.relief?'✓':'·'}</span><span class="d">${esc(i.desc||'')}${i.why?`<small>${esc(i.why)}</small>`:''}</span><span class="num">${RM(+i.amount||0)}</span></li>`).join('')}</ul>`:''}
+    ${r.reason?`<p class="why">${esc(r.reason)}</p>`:''}<p class="why" style="font-size:.76rem">Semak dulu sebelum tekan Simpan. AI boleh tersilap.</p>`;
+}
+
+/* tetapan */
+function openAI(){
+  const on=!!S.ai;
+  openG('ai','Bacaan resit AI',`${on?`<div class="aibox"><div class="aih">✓ AI aktif</div><div class="why">Setiap kali kau snap resit untuk rekod keluar, AI isi jumlah, tarikh, kedai dan relief sendiri.</div></div>`:''}
+    <ol class="steps" style="margin:0 0 12px">
+      <li>Buka <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">aistudio.google.com/apikey</a> dan log masuk dengan Gmail kau.</li>
+      <li>Tekan <b>Create API key</b>. Kalau ditanya projek, pilih yang dicadangkan.</li>
+      <li>Copy kunci tu (bermula AIza…) dan tampal di bawah.</li></ol>
+    <div class="field"><label for="aiKey">Kunci API Gemini</label><input id="aiKey" type="password" autocomplete="off" placeholder="${on?'Dah disimpan · tampal untuk tukar':'AIza…'}"></div>
+    <button class="btn pri block" data-act="aisave">Simpan & uji</button>
+    ${on?'<button class="btn block danger" style="margin-top:8px" data-act="aioff">Matikan AI</button>':''}
+    <p class="note" style="margin-top:12px">Percuma, tak perlu kad kredit. Kunci disimpan dalam pelayan Google kau, bukan dalam telefon. Gambar resit dihantar ke Gemini untuk dibaca; untuk akaun percuma, Google boleh guna kandungan tu untuk tambah baik produk mereka.</p>`);
+}
+async function saveAI(off){
+  const key=off?'':($('#aiKey')?.value||'').trim();
+  if(!off&&!/^[\w-]{20,}$/.test(key)){toast('Tampal kunci API yang betul dulu.');return;}
+  const btn=$(off?'[data-act="aioff"]':'[data-act="aisave"]');if(btn){btn.disabled=true;btn.textContent=off?'Mematikan…':'Menguji kunci…';}
+  try{const r=await run('setAiKey',key);S.ai=!off;closeG();toast(off?'AI dimatikan.':'AI aktif'+(r&&r.model?` (${r.model})`:'')+'. Cuba snap resit.');}
+  catch(e){toast(e.message||'Tak dapat simpan kunci.');if(btn){btn.disabled=false;btn.textContent=off?'Matikan AI':'Simpan & uji';}}
+}
 /* ================= EVENTS ================= */
 document.addEventListener('click',e=>{
   const el=e.target.closest('[data-view],[data-go],[data-ym],[data-edit],[data-act],[data-type],[data-pickcat],[data-rm-r],[data-rm-f],[data-copy],[data-rm-doc],[data-open-file],[data-ttab],[data-rfilter],[data-relief],[data-addrel],[data-catedit],[data-ceicon],[data-cecolor],[data-kdel]');
@@ -1212,6 +1289,9 @@ document.addEventListener('click',e=>{
   else if(a==='catsave')saveCat();
   else if(a==='catdel'){if(el.dataset.confirm!=='1'){el.dataset.confirm='1';el.textContent='Tekan lagi untuk buang';return;}delCat();}
   else if(a==='import')openImport();
+  else if(a==='ai')openAI();
+  else if(a==='aisave')saveAI(false);
+  else if(a==='aioff'){if(el.dataset.confirm!=='1'){el.dataset.confirm='1';el.textContent='Tekan lagi untuk matikan';return;}saveAI(true);}
   else if(a==='impgo')doImport();
   else if(a==='server')openServer();
   else if(a==='serversave'){const v=$('#apiIn').value.trim();if(!/^https:\/\/script\.google\.com\/macros\/s\/[\w-]+\/exec$/.test(v)){toast('Pautan mesti bermula https://script.google.com/macros/s/ dan berakhir /exec');return;}ls.set('cf_api',v);saveToken(null);closeG();boot();}
@@ -1284,7 +1364,7 @@ async function loadAll(){
   const d=await run('load');
   S.txns=d.txns||[];S.settings=d.settings&&typeof d.settings==='object'?d.settings:{years:{}};if(!S.settings.years)S.settings.years={};
   S.v4=!S.txns.length||('srcKey' in S.txns[0]);migrate4();
-  S.links={sheet:d.sheetUrl,folder:d.folderUrl};
+  S.links={sheet:d.sheetUrl,folder:d.folderUrl};S.ai=!!d.ai;
   L.classList.add('off');render();
 }
 async function boot(){
